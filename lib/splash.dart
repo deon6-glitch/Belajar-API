@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_crud_api_sample_app/src/ui/app.dart';
 
-class Login extends StatefulWidget {
+class Splash extends StatefulWidget {
  @override
- _Login createState() => _Login();
+ _Splash createState() => _Splash();
 }
-class _Login extends State<Login> {
+class _Splash extends State<Splash> {
  void initState() {
  super.initState();
  splashscreenStart();
@@ -23,7 +23,7 @@ class _Login extends State<Login> {
  @override
  Widget build(BuildContext context) {
  return Scaffold(
- backgroundColor: Colors.pinkAccent,
+ backgroundColor: Colors.blueAccent,
  body: Center(
  child: Column(
  mainAxisAlignment: MainAxisAlignment.center,

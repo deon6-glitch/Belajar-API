@@ -2,9 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_crud_api_sample_app/src/api/api_service.dart';
 import 'package:flutter_crud_api_sample_app/src/model/profile.dart';
 
+void main() => runApp(MaterialApp(
+  theme: ThemeData.dark(),
+  home: new FormAddScreen(),
+)
+);
+
 final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
+// ignore: must_be_immutable
 class FormAddScreen extends StatefulWidget {
+  Profile profile;
+
+  FormAddScreen({this.profile});
+
   @override
   _FormAddScreenState createState() => _FormAddScreenState();
 }
@@ -20,13 +31,27 @@ class _FormAddScreenState extends State<FormAddScreen> {
   TextEditingController _controllerAge = TextEditingController();
 
   @override
+  void initState() {
+    if (widget.profile != null) {
+      _isFieldNameValid = true;
+      _controllerName.text = widget.profile.name;
+      _isFieldEmailValid = true;
+      _controllerEmail.text = widget.profile.email;
+      _isFieldAgeValid = true;
+      _controllerAge.text = widget.profile.age.toString();
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldState,
       appBar: AppBar(
+        backgroundColor: Colors.blueAccent,
         iconTheme: IconThemeData(color: Colors.white),
         title: Text(
-          "Form Add",
+          widget.profile == null ? "Form Add" : "Change Data",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -44,6 +69,14 @@ class _FormAddScreenState extends State<FormAddScreen> {
                   padding: const EdgeInsets.only(top: 8.0),
                   // ignore: deprecated_member_use
                   child: RaisedButton(
+                    child: Text(
+                      widget.profile == null
+                          ? "Submit".toUpperCase()
+                          : "Update Data".toUpperCase(),
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                     onPressed: () {
                       if (_isFieldNameValid == null ||
                           _isFieldEmailValid == null ||
@@ -65,24 +98,33 @@ class _FormAddScreenState extends State<FormAddScreen> {
                       int age = int.parse(_controllerAge.text.toString());
                       Profile profile =
                           Profile(name: name, email: email, age: age);
-                      _apiService.createProfile(profile).then((isSuccess) {
-                        setState(() => _isLoading = false);
-                        if (isSuccess) {
-                          Navigator.pop(_scaffoldState.currentState.context);
-                        } else {
-                          // ignore: deprecated_member_use
-                          _scaffoldState.currentState.showSnackBar(SnackBar(
-                            content: Text("Submit data failed"),
-                          ));
-                        }
-                      });
+                      if (widget.profile == null) {
+                        _apiService.createProfile(profile).then((isSuccess) {
+                          setState(() => _isLoading = false);
+                          if (isSuccess) {
+                            Navigator.pop(_scaffoldState.currentState.context, true);
+                          } else {
+                            // ignore: deprecated_member_use
+                            _scaffoldState.currentState.showSnackBar(SnackBar(
+                              content: Text("Submit data failed"),
+                            ));
+                          }
+                        });
+                      } else {
+                        profile.id = widget.profile.id;
+                        _apiService.updateProfile(profile).then((isSuccess) {
+                          setState(() => _isLoading = false);
+                          if (isSuccess) {
+                            Navigator.pop(_scaffoldState.currentState.context, true);
+                          } else {
+                            // ignore: deprecated_member_use
+                            _scaffoldState.currentState.showSnackBar(SnackBar(
+                              content: Text("Update data failed"),
+                            ));
+                          }
+                        });
+                      }
                     },
-                    child: Text(
-                      "Submit".toUpperCase(),
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
                     color: Colors.orange[600],
                   ),
                 )

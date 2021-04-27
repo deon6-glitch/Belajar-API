@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_crud_api_sample_app/src/api/api_service.dart';
 import 'package:flutter_crud_api_sample_app/src/model/profile.dart';
-
+import 'package:flutter_crud_api_sample_app/src/ui/formadd/form_add_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -9,6 +9,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  BuildContext context;
   ApiService apiService;
 
   @override
@@ -19,14 +20,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    this.context = context;
     return SafeArea(
       child: FutureBuilder(
         future: apiService.getProfiles(),
         builder: (BuildContext context, AsyncSnapshot<List<Profile>> snapshot) {
           if (snapshot.hasError) {
             return Center(
-              child: Text(
-                  "Something wrong with message: ${snapshot.error.toString()}"),
+              child: Text("Something wrong with message: ${snapshot.error.toString()}"),
             );
           } else if (snapshot.connectionState == ConnectionState.done) {
             List<Profile> profiles = snapshot.data;
@@ -68,8 +69,42 @@ class _HomeScreenState extends State<HomeScreen> {
                         // ignore: deprecated_member_use
                         FlatButton(
                           onPressed: () {
-                            // ignore: todo
-                            // TODO: do something in here
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text("Warning"),
+                                    content: Text("Are you sure want to delete data profile ${profile.name}?"),
+                                    actions: <Widget>[
+                                      // ignore: deprecated_member_use
+                                      FlatButton(
+                                        child: Text("Yes"),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          apiService.deleteProfile(profile.id).then((isSuccess) {
+                                            if (isSuccess) {
+                                              setState(() {});
+                                              Scaffold.of(this.context)
+                                                  // ignore: deprecated_member_use
+                                                  .showSnackBar(SnackBar(content: Text("Delete data success")));
+                                            } else {
+                                              Scaffold.of(this.context)
+                                                  // ignore: deprecated_member_use
+                                                  .showSnackBar(SnackBar(content: Text("Delete data failed")));
+                                            }
+                                          });
+                                        },
+                                      ),
+                                      // ignore: deprecated_member_use
+                                      FlatButton(
+                                        child: Text("No"),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      )
+                                    ],
+                                  );
+                                });
                           },
                           child: Text(
                             "Delete",
@@ -78,9 +113,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         // ignore: deprecated_member_use
                         FlatButton(
-                          onPressed: () {
-                            // ignore: todo
-                            // TODO: do something in here
+                          onPressed: () async {
+                            var result = await Navigator.push(context, MaterialPageRoute(builder: (context) {
+                              return FormAddScreen(profile: profile);
+                            }));
+                            if (result != null) {
+                              setState(() {});
+                            }
                           },
                           child: Text(
                             "Edit",
