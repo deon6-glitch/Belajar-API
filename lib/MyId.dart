@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_crud_api_sample_app/main.dart';
-
+import 'package:flutter_crud_api_sample_app/src/ui/app.dart';
 
 void main() {
   runApp(MyProfile());
@@ -14,11 +13,11 @@ class MyProfile extends StatelessWidget {
       home: Scaffold(
         backgroundColor: Colors.black38,
         appBar: AppBar(
-          backgroundColor: Colors.amberAccent,
-          title: Text('Profil',
-          style: TextStyle(
-            color: Colors.black
-          ),),
+          backgroundColor: Colors.blueAccent,
+          title: Text(
+            'Profil',
+            style: TextStyle(color: Colors.black),
+          ),
           centerTitle: true,
           leading: Icon(Icons.menu, color: Colors.black),
         ),
@@ -86,37 +85,32 @@ class NIM extends StatelessWidget {
     );
   }
 }
-class Button extends StatelessWidget {
 
+class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: 32),
-        child: ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.resolveWith<Color>(
-              (Set<MaterialState> states) {
-                if (states.contains(MaterialState.pressed))
-                  return Colors.yellow;
-                return Colors.amber; // Use the component's default.
-              },
-            ),
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.pressed))
+                return Colors.greenAccent;
+              return Colors.blueAccent; // Use the component's default.
+            },
           ),
+        ),
         onPressed: () {
-           Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp() ));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => App()));
         },
-        child: 
-        Text(
+        child: Text(
           'BACK',
-          style: 
-          TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.w500,
-            color: Colors.black),
+          style: TextStyle(
+              fontSize: 25, fontWeight: FontWeight.w500, color: Colors.black),
         ),
-        ),
+      ),
     );
   }
 }
-
-

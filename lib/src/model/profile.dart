@@ -21,7 +21,6 @@ class Profile {
   String toString() {
     return 'Profile{id: $id, name: $name, email: $email, age: $age}';
   }
-
 }
 
 List<Profile> profileFromJson(String jsonData) {

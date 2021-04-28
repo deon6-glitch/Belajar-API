@@ -4,11 +4,11 @@ import 'package:flutter_crud_api_sample_app/splash.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
- @override
- Widget build(BuildContext context) {
- return MaterialApp(
- theme: ThemeData(),
- home: new Splash(),
- );
- }
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(),
+      home: new Splash(),
+    );
+  }
 }
